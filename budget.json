@@ -1,6 +1,0 @@
-[
-  {"name":"Food",          "spent":420,"limit":600},
-  {"name":"Transport",     "spent":180,"limit":400},
-  {"name":"Entertainment", "spent":275,"limit":500},
-  {"name":"Shopping",      "spent":365,"limit":500}
-]
