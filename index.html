@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fyutr Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden;}
+#bg{width:100%;height:100vh;position:fixed;top:0;left:0;z-index:-1;}
+.login-box{width:90%;max-width:360px;background:rgba(255,255,255,0.88);backdrop-filter:blur(8px);padding:36px 32px;border-radius:18px;box-shadow:0 8px 32px rgba(30,58,138,0.18);}
+h1{text-align:center;margin-bottom:6px;color:#2563eb;font-size:28px;font-weight:700;}
+.subtitle{text-align:center;margin-bottom:28px;color:#6b7280;font-size:13px;}
+.input-box{margin-bottom:16px;}
+.input-box label{display:block;margin-bottom:5px;font-size:13px;font-weight:500;color:#374151;}
+.input-box input{width:100%;padding:11px 14px;border:1px solid #d1d5db;border-radius:10px;font-size:14px;font-family:'Poppins',sans-serif;outline:none;transition:border 0.2s;}
+.input-box input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+button{width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#1E3A8A,#3B82F6);color:white;cursor:pointer;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;transition:opacity 0.2s;}
+button:hover{opacity:0.9;}
+.error{background:#fee2e2;color:#dc2626;padding:10px 14px;margin-bottom:16px;border-radius:8px;font-size:13px;display:none;}
+.hint{text-align:center;margin-top:16px;font-size:12px;color:#9ca3af;}
+.hint span{color:#2563eb;font-weight:500;}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div class="login-box">
+  <h1>Fyutr</h1>
+  <p class="subtitle">Student Finance Dashboard</p>
+  <div class="error" id="error-msg"></div>
+  <div class="input-box">
+    <label>Email</label>
+    <input type="email" id="email" placeholder="student@fyutr.com" onkeydown="if(event.key==='Enter')login()">
+  </div>
+  <div class="input-box">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+  </div>
+  <button onclick="login()">Login</button>
+  <p class="hint">Demo: <span>student@fyutr.com</span> / <span>fyutr123</span></p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+<script>
+VANTA.FOG({el:"#bg",mouseControls:true,touchControls:true,highlightColor:0x13ff,midtoneColor:0xe6ff,lowlightColor:0xff07});
+function login(){
+  const email=document.getElementById('email').value.trim();
+  const pass=document.getElementById('password').value.trim();
+  const err=document.getElementById('error-msg');
+  if(email==='student@fyutr.com'&&pass==='fyutr123'){
+    sessionStorage.setItem('fyutr_user','Raiyan');
+    window.location.href='dashboard.html';
+  }else{
+    err.style.display='block';
+    err.textContent='Invalid email or password.';
+  }
+}
+// Redirect if already logged in
+if(sessionStorage.getItem('fyutr_user')) window.location.href='dashboard.html';
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+# Fyutr – Student Finance Dashboard
+
+A static web app for student financial management. Built with HTML, CSS, JavaScript, and Chart.js.
+
+## 🔗 Live Demo
+> Replace with your GitHub Pages URL after deployment:
+> `https://YOUR_USERNAME.github.io/fyutr/`
+
+## 🔐 Demo Login
+| Field    | Value                  |
+|----------|------------------------|
+| Email    | student@fyutr.com      |
+| Password | fyutr123               |
+
+## 📂 Project Structure
+```
+fyutr/
+├── index.html           ← Login page
+├── dashboard.html       ← Main dashboard
+├── transactions.html    ← All transactions (searchable + filterable)
+├── budget.html          ← Budget planner with charts
+├── goals.html           ← Saving goals tracker
+├── analytics.html       ← Spending analytics
+├── transfermoney.html   ← Send / QR / Receive
+├── notifications.html   ← Alerts
+├── settings.html        ← User preferences
+├── assets/
+│   ├── css/style.css
+│   └── js/main.js       ← Shared auth, sidebar, dark mode, counters
+└── data/
+    ├── transactions.json
+    ├── budget.json
+    └── goals.json
+```
+
+## 🚀 Deploy to GitHub Pages
+1. Create a new GitHub repo (e.g. `fyutr`)
+2. Upload all files maintaining the folder structure above
+3. Go to **Settings → Pages → Source: main branch / root**
+4. Your site will be live at `https://YOUR_USERNAME.github.io/fyutr/`
+
+## ✨ Features
+- Login with JS credential check
+- Persistent dark mode (localStorage)
+- Mobile-responsive sidebar
+- Chart.js: doughnut, line, bar charts
+- Transactions search + filter
+- Data loaded from JSON files via fetch()
+- Auth guard on all pages (redirects to login if not authenticated)

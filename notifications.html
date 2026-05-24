@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fyutr – Notifications</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="container">
+  <div id="sidebar-mount"></div>
+  <div class="main">
+
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="toggle-btn mobile-menu" onclick="toggleSidebar()">☰</button>
+        <a href="dashboard.html" style="font-size:20px;text-decoration:none;">◀️</a>
+        <h1 style="margin:0;">Notifications</h1>
+      </div>
+      <p style="margin:0;font-size:16px;color:#888;">Your latest alerts and updates</p>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h2 style="margin:0;">Recent</h2>
+        <button onclick="document.querySelectorAll('.n-dot').forEach(d=>d.remove())" style="background:none;border:none;color:#888;cursor:pointer;font-size:13px;">Mark all read</button>
+      </div>
+      <div id="notif-list"></div>
+    </div>
+
+  </div>
+</div>
+<script src="assets/js/main.js"></script>
+<script>
+requireAuth();
+const notifications = [
+  {bg:'#FCEBEB',icon:'⚠️',title:'Shopping budget at 82%',    msg:"You're close to your RM 300 limit.",unread:true},
+  {bg:'#E1F5EE',icon:'💰',title:'Allowance received',          msg:'RM 2,500 credited to your account.',unread:true},
+  {bg:'#E6F1FB',icon:'🎯',title:'Vacation Fund hit 60%',       msg:'RM 1,800 of RM 3,000 goal saved.',unread:true},
+  {bg:'#FAEEDA',icon:'🧾',title:'New transaction recorded',    msg:'RM 45.00 at Tesco Extra — Food.',unread:true},
+  {bg:'#EEEDFE',icon:'💡',title:'Smart tip',                   msg:'You spend 30% more on weekends.',unread:true},
+  {bg:'#f5f5f5',icon:'🔄',title:'Transfer completed',          msg:'RM 200 sent to Saving account.',unread:false},
+  {bg:'#f5f5f5',icon:'🔒',title:'New device login',            msg:'Sign-in on Chrome, Windows.',unread:false},
+  {bg:'#f5f5f5',icon:'📊',title:'Monthly report ready',        msg:'Your April summary is available.',unread:false},
+];
+const el = document.getElementById('notif-list');
+notifications.forEach(n=>{
+  el.innerHTML += `
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.05);">
+      ${n.unread?'<span class="n-dot" style="width:7px;height:7px;border-radius:50%;background:#534AB7;flex-shrink:0;"></span>':'<span style="width:7px;flex-shrink:0;"></span>'}
+      <span style="width:36px;height:36px;border-radius:10px;background:${n.bg};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">${n.icon}</span>
+      <div>
+        <p style="margin:0 0 2px;font-size:14px;font-weight:${n.unread?600:400};color:${n.unread?'var(--text)':'#999'};">${n.title}</p>
+        <p style="margin:0;font-size:12px;color:#888;">${n.msg}</p>
+      </div>
+    </div>`;
+});
+</script>
+</body>
+</html>

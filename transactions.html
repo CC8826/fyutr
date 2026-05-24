@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fyutr – Transactions</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="container">
+  <div id="sidebar-mount"></div>
+  <div class="main">
+
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="toggle-btn mobile-menu" onclick="toggleSidebar()">☰</button>
+        <a href="dashboard.html" style="font-size:20px;text-decoration:none;">◀️</a>
+        <h1 style="margin:0;">Transactions</h1>
+      </div>
+      <p style="margin:0;font-size:16px;color:#888;">View all financial activity</p>
+    </div>
+
+    <div class="cards" style="margin-bottom:20px;">
+      <div class="card"><h3>Total In</h3><h2 class="count" data-target="3200" data-rm>RM 0</h2><p class="positive">This month</p></div>
+      <div class="card"><h3>Total Out</h3><h2 class="count" data-target="1240" data-rm>RM 0</h2><p class="negative">This month</p></div>
+      <div class="card"><h3>Transactions</h3><h2 class="count" data-target="24">0</h2><p class="positive">This month</p></div>
+    </div>
+
+    <!-- Filter bar -->
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <input id="search" type="text" placeholder="Search transactions…" oninput="renderTransactions()" style="padding:9px 14px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:'Poppins',sans-serif;background:var(--card);color:var(--text);flex:1;min-width:160px;">
+      <select id="filter-type" onchange="renderTransactions()" style="padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:'Poppins',sans-serif;background:var(--card);color:var(--text);">
+        <option value="all">All</option>
+        <option value="in">Income only</option>
+        <option value="out">Expenses only</option>
+      </select>
+    </div>
+
+    <div class="transaction-card" id="transactions-list"></div>
+
+  </div>
+</div>
+<script src="assets/js/main.js"></script>
+<script>
+requireAuth();
+let allTransactions = [];
+
+fetch('data/transactions.json').then(r=>r.json()).then(data=>{
+  allTransactions = data;
+  renderTransactions();
+});
+
+function renderTransactions() {
+  const q     = document.getElementById('search').value.toLowerCase();
+  const type  = document.getElementById('filter-type').value;
+  const el    = document.getElementById('transactions-list');
+
+  const filtered = allTransactions.filter(t=>{
+    const matchQ    = t.name.toLowerCase().includes(q) || t.date.toLowerCase().includes(q);
+    const matchType = type==='all' || (type==='in' && t.amount>0) || (type==='out' && t.amount<0);
+    return matchQ && matchType;
+  });
+
+  if(!filtered.length){el.innerHTML='<p style="padding:20px;color:#888;text-align:center;">No transactions found.</p>';return;}
+
+  el.innerHTML = filtered.map(t=>{
+    const pos = t.amount > 0;
+    return `
+      <div class="transaction">
+        <div class="transaction-left">
+          <strong>${t.name}</strong>
+          <small>${t.date} &nbsp;·&nbsp; ${t.category}</small>
+        </div>
+        <div class="${pos?'positive':'negative'}">${pos?'+':''}RM ${Math.abs(t.amount).toLocaleString()}</div>
+      </div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>

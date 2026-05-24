@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fyutr Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <div id="sidebar-mount"></div>
+
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div>
+        <button class="toggle-btn mobile-menu" onclick="toggleSidebar()">☰</button>
+        <h1 id="welcome-msg">Welcome Back, Raiyan 👋</h1>
+        <p>Student Finance Dashboard</p>
+      </div>
+      <div class="actions">
+        <button class="notification" onclick="window.location.href='notifications.html'">🔔</button>
+        <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+      <h1>Manage Your Finances Smarter</h1>
+      <p>Fyutr helps students track expenses, monitor saving goals, visualize spending analytics, and manage financial planning through a modern dashboard experience.</p>
+      <div class="quick-actions">
+        <button class="btn-action" onclick="location.href='transfermoney.html'">Transfer Money</button>
+        <button class="btn-action" onclick="location.href='budget.html'">Add Budget</button>
+        <button class="btn-action" onclick="location.href='goals.html'">Create Goal</button>
+      </div>
+    </div>
+
+    <!-- MAIN CARDS -->
+    <div class="cards">
+      <div class="card"><h3>Total Balance</h3><h2 class="count" data-target="12450" data-rm>RM 0</h2><p class="positive">+12.5% this month</p></div>
+      <div class="card"><h3>Monthly Spending</h3><h2 class="count" data-target="1240" data-rm>RM 0</h2><p class="negative">-4.2% this week</p></div>
+      <div class="card"><h3>Saving Goals</h3><h2 class="count" data-target="3800" data-rm>RM 0</h2><p class="positive">2 active goals</p></div>
+      <div class="card"><h3>Internship Allowance</h3><h2 class="count" data-target="2500" data-rm>RM 0</h2><p class="positive">Updated yesterday</p></div>
+    </div>
+
+    <!-- EXTRA CARDS -->
+    <div class="cards">
+      <div class="card"><h3>Total Transactions</h3><h2 class="count" data-target="248">0</h2><p class="positive">+15 new today</p></div>
+      <div class="card"><h3>Monthly Saving</h3><h2 class="count" data-target="5200" data-rm>RM 0</h2><p class="positive">Saving improved</p></div>
+      <div class="card"><h3>Expenses Paid</h3><h2 class="count" data-target="89">0</h2><p class="positive">Bills completed</p></div>
+      <div class="card"><h3>Budget Remaining</h3><h2 class="count" data-target="1750" data-rm>RM 0</h2><p class="negative">Careful spending</p></div>
+    </div>
+
+    <!-- CHARTS ROW 1 -->
+    <div class="grid">
+      <div class="chart-card">
+        <div class="section-title"><h2>Spending Analytics</h2></div>
+        <canvas id="financeChart"></canvas>
+      </div>
+      <div class="budget-card">
+        <div class="section-title"><h2>Budget Planner</h2></div>
+        <div id="budget-bars"></div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 2 -->
+    <div class="grid">
+      <div class="chart-card">
+        <div class="section-title"><h2>Weekly Spending Trend</h2></div>
+        <div style="position:relative;height:280px;"><canvas id="lineChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="section-title"><h2>Income vs Expenses</h2></div>
+        <div style="position:relative;height:280px;"><canvas id="barChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- TRANSACTIONS + GOALS -->
+    <div class="grid">
+      <div class="transaction-card">
+        <div class="section-title"><h2>Recent Transactions</h2></div>
+        <div class="transactions" id="transactions-list"></div>
+      </div>
+      <div class="goals-card">
+        <div class="section-title"><h2>Saving Goals</h2></div>
+        <div id="goals-list"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+<script>
+requireAuth();
+document.getElementById('welcome-msg').textContent = 'Welcome Back, ' + (sessionStorage.getItem('fyutr_user') || 'Raiyan') + ' 👋';
+
+// Budget bars from JSON
+fetch('data/budget.json').then(r=>r.json()).then(data=>{
+  const el = document.getElementById('budget-bars');
+  data.forEach(b=>{
+    const pct = Math.round((b.spent/b.limit)*100);
+    const color = pct>=80?'#EF4444':pct>=60?'#F59E0B':'#22C55E';
+    el.innerHTML += `
+      <div class="budget-item">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <h4>${b.name}</h4>
+          <small style="color:${color}">${pct}%</small>
+        </div>
+        <div class="progress"><div class="progress-bar" style="width:${pct}%;background:${color}"></div></div>
+      </div>`;
+  });
+});
+
+// Goals from JSON
+fetch('data/goals.json').then(r=>r.json()).then(data=>{
+  const el = document.getElementById('goals-list');
+  data.slice(0,3).forEach(g=>{
+    const pct = Math.round((g.saved/g.target)*100);
+    el.innerHTML += `
+      <div class="goal">
+        <h4>${g.name}</h4>
+        <div class="progress"><div class="progress-bar" style="width:${Math.min(pct,100)}%"></div></div>
+        <small>RM ${g.saved.toLocaleString()} / RM ${g.target.toLocaleString()}</small>
+      </div>`;
+  });
+});
+
+// Recent transactions from JSON
+fetch('data/transactions.json').then(r=>r.json()).then(data=>{
+  const el = document.getElementById('transactions-list');
+  data.slice(0,5).forEach(t=>{
+    const pos = t.amount > 0;
+    el.innerHTML += `
+      <div class="transaction">
+        <div class="transaction-left">
+          <strong>${t.name}</strong>
+          <small>${t.date}</small>
+        </div>
+        <div class="${pos?'positive':'negative'}">${pos?'+':''}RM ${Math.abs(t.amount)}</div>
+      </div>`;
+  });
+});
+
+// Charts
+new Chart(document.getElementById('financeChart'),{type:'doughnut',data:{labels:['Food','Transport','Shopping','Entertainment'],datasets:[{data:[35,20,25,20],backgroundColor:['#1E3A8A','#3B82F6','#60A5FA','#93C5FD'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+new Chart(document.getElementById('lineChart'),{type:'line',data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Weekly Spending',data:[120,90,150,70,180,110,140],borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,0.08)',tension:0.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false}});
+new Chart(document.getElementById('barChart'),{type:'bar',data:{labels:['Jan','Feb','Mar','Apr'],datasets:[{label:'Income',data:[2500,2800,3000,2700],backgroundColor:'#2563eb'},{label:'Expenses',data:[1800,2100,1900,2200],backgroundColor:'#60a5fa'}]},options:{responsive:true,maintainAspectRatio:false}});
+</script>
+</body>
+</html>

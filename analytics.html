@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fyutr – Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+  <div id="sidebar-mount"></div>
+  <div class="main">
+
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="toggle-btn mobile-menu" onclick="toggleSidebar()">☰</button>
+        <a href="dashboard.html" style="font-size:20px;text-decoration:none;">◀️</a>
+        <h1 style="margin:0;">Analytics</h1>
+      </div>
+      <p style="margin:0;font-size:16px;color:#888;">Your financial insights</p>
+    </div>
+
+    <div class="cards" style="margin-bottom:20px;">
+      <div class="card"><h3>Avg Daily Spend</h3><h2 class="count" data-target="41" data-rm>RM 0</h2><p class="negative">Above target</p></div>
+      <div class="card"><h3>Highest Expense</h3><h2>Food</h2><p class="negative">RM 420 this month</p></div>
+      <div class="card"><h3>Savings Rate</h3><h2>38%</h2><p class="positive">Of monthly income</p></div>
+      <div class="card"><h3>Net Cash Flow</h3><h2 class="count" data-target="1260" data-rm>RM 0</h2><p class="positive">Income - Expenses</p></div>
+    </div>
+
+    <div class="grid" style="margin-bottom:20px;">
+      <div class="chart-card">
+        <h3 style="margin-bottom:16px;">Monthly Spending Trend</h3>
+        <div style="position:relative;height:240px;"><canvas id="lineChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3 style="margin-bottom:16px;">Spending by Category</h3>
+        <canvas id="doughnutChart"></canvas>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-bottom:20px;">
+      <div class="chart-card">
+        <h3 style="margin-bottom:16px;">Income vs Expenses</h3>
+        <div style="position:relative;height:240px;"><canvas id="barChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3 style="margin-bottom:16px;">Weekly Spending Pattern</h3>
+        <div style="position:relative;height:240px;"><canvas id="weekChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="budget-card">
+      <h3 style="margin-bottom:16px;">📊 Financial Insights</h3>
+      <p style="padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);font-size:14px;margin:0;">📈 <strong>Spending trend:</strong> Your expenses increased by 12% compared to last month, mostly driven by food and shopping. Try reviewing your receipts weekly to stay aware.</p>
+      <p style="padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);font-size:14px;margin:0;">💸 <strong>Cash flow:</strong> You earned RM 2,500 and spent RM 1,240 this month — a healthy 38% savings rate. Most advisors recommend at least 20%, so you're well ahead.</p>
+      <p style="padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);font-size:14px;margin:0;">📅 <strong>Weekend spending:</strong> You spend nearly 2x more on Saturdays and Sundays. Setting a fixed weekend budget of RM 80–100 can help significantly.</p>
+      <p style="padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);font-size:14px;margin:0;">🍔 <strong>Food is your top expense:</strong> At RM 420, food takes up 34% of total spending. Cooking at home 3x a week could save RM 80–100 monthly.</p>
+      <p style="padding:10px 0;font-size:14px;margin:0;">🎯 <strong>Goal alignment:</strong> Based on your current savings of RM 950/month, you're on track to reach your Laptop Fund in approximately 4 months.</p>
+    </div>
+
+  </div>
+</div>
+<script src="assets/js/main.js"></script>
+<script>
+requireAuth();
+const months=['Jan','Feb','Mar','Apr','May','Jun'];
+new Chart(document.getElementById('lineChart'),{type:'line',data:{labels:months,datasets:[{label:'Spending',data:[980,1100,1050,1300,1180,1240],borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.08)',tension:0.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+new Chart(document.getElementById('doughnutChart'),{type:'doughnut',data:{labels:['Food','Transport','Entertainment','Shopping'],datasets:[{data:[420,180,275,365],backgroundColor:['#3B82F6','#22C55E','#F59E0B','#EF4444'],borderWidth:0}]},options:{plugins:{legend:{position:'bottom'}},cutout:'65%'}});
+new Chart(document.getElementById('barChart'),{type:'bar',data:{labels:months,datasets:[{label:'Income',data:[2500,2500,2500,2500,2500,2500],backgroundColor:'rgba(34,197,94,0.7)'},{label:'Expenses',data:[980,1100,1050,1300,1180,1240],backgroundColor:'rgba(239,68,68,0.7)'}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}},plugins:{legend:{position:'bottom'}}}});
+new Chart(document.getElementById('weekChart'),{type:'bar',data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Avg Spend',data:[35,28,40,32,55,90,75],backgroundColor:['#3B82F6','#3B82F6','#3B82F6','#3B82F6','#F59E0B','#EF4444','#EF4444']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fyutr – Transfer Money</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="container">
+  <div id="sidebar-mount"></div>
+  <div class="main">
+
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="toggle-btn mobile-menu" onclick="toggleSidebar()">☰</button>
+        <a href="dashboard.html" style="font-size:20px;text-decoration:none;">◀️</a>
+        <h1 style="margin:0;">Transfer Money</h1>
+      </div>
+      <p style="margin:0;font-size:16px;color:#888;">Send, receive or scan to pay</p>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;text-align:center;">
+      <p style="color:#888;margin:0;font-size:13px;">Available Balance</p>
+      <h1 style="margin:8px 0;font-size:40px;">RM 12,450.00</h1>
+      <span style="background:#dbeafe;color:#1E3A8A;font-size:11px;padding:3px 12px;border-radius:99px;font-weight:600;">Student</span>
+    </div>
+
+    <div class="cards" style="margin-bottom:20px;">
+      <div class="card" style="text-align:center;cursor:pointer;" onclick="show('send')">
+        <div style="font-size:32px;margin-bottom:8px;">📤</div><h3>Send</h3>
+        <p style="color:#888;font-size:12px;margin:0;">Transfer to someone</p>
+      </div>
+      <div class="card" style="text-align:center;cursor:pointer;" onclick="show('qrpay')">
+        <div style="font-size:32px;margin-bottom:8px;">📷</div><h3>Scan QR</h3>
+        <p style="color:#888;font-size:12px;margin:0;">Pay via QR code</p>
+      </div>
+      <div class="card" style="text-align:center;cursor:pointer;" onclick="show('receive')">
+        <div style="font-size:32px;margin-bottom:8px;">📥</div><h3>Receive</h3>
+        <p style="color:#888;font-size:12px;margin:0;">Show your QR</p>
+      </div>
+    </div>
+
+    <div id="send" class="card panel" style="margin-bottom:20px;display:none;">
+      <h3 style="margin-bottom:16px;">Send Money</h3>
+      <input type="text" placeholder="Recipient name or phone number" style="width:100%;padding:10px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;margin-bottom:12px;font-family:'Poppins',sans-serif;background:transparent;color:inherit;">
+      <input type="number" placeholder="Amount (RM)" style="width:100%;padding:10px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;margin-bottom:12px;font-family:'Poppins',sans-serif;background:transparent;color:inherit;">
+      <input type="text" placeholder="Note (optional)" style="width:100%;padding:10px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;margin-bottom:16px;font-family:'Poppins',sans-serif;background:transparent;color:inherit;">
+      <button onclick="alert('Transfer successful! ✅')" style="width:100%;padding:12px;background:linear-gradient(135deg,#1E3A8A,#3B82F6);color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;">Send Now</button>
+    </div>
+
+    <div id="qrpay" class="card panel" style="margin-bottom:20px;display:none;text-align:center;">
+      <h3 style="margin-bottom:16px;">Scan to Pay</h3>
+      <div style="width:200px;height:200px;border:2px dashed #3B82F6;border-radius:16px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:48px;">📷</div>
+      <p style="color:#888;font-size:13px;">Point your camera at a DuitNow or QR code to pay instantly.</p>
+      <button onclick="alert('Camera feature coming soon! 📷')" style="margin-top:12px;padding:10px 28px;background:linear-gradient(135deg,#1E3A8A,#3B82F6);color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;">Open Camera</button>
+    </div>
+
+    <div id="receive" class="card panel" style="margin-bottom:20px;display:none;text-align:center;">
+      <h3 style="margin-bottom:16px;">My QR Code</h3>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=fyutr-student-raiyan" style="border-radius:12px;margin-bottom:12px;" alt="QR Code">
+      <p style="font-weight:600;margin:0;" id="qr-name">Raiyan</p>
+      <p style="color:#888;font-size:12px;margin:4px 0 16px;">DuitNow ID: 011-2345678</p>
+      <button onclick="alert('QR saved to gallery! 🖼️')" style="padding:10px 28px;background:linear-gradient(135deg,#1E3A8A,#3B82F6);color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;">Save QR</button>
+    </div>
+
+  </div>
+</div>
+<script src="assets/js/main.js"></script>
+<script>
+requireAuth();
+document.getElementById('qr-name').textContent = sessionStorage.getItem('fyutr_user') || 'Raiyan';
+function show(id){
+  document.querySelectorAll('.panel').forEach(p=>p.style.display='none');
+  document.getElementById(id).style.display='block';
+}
+</script>
+</body>
+</html>

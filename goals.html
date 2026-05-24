@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fyutr – Saving Goals</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="container">
+  <div id="sidebar-mount"></div>
+  <div class="main">
+
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="toggle-btn mobile-menu" onclick="toggleSidebar()">☰</button>
+        <a href="dashboard.html" style="font-size:20px;text-decoration:none;">◀️</a>
+        <h1 style="margin:0;">Saving Goals</h1>
+      </div>
+      <p style="margin:0;font-size:16px;color:#888;">Track your progress</p>
+    </div>
+
+    <div class="cards" style="margin-bottom:20px;">
+      <div class="card"><h3>Total Saved</h3><h2 class="count" data-target="7500" data-rm>RM 0</h2><p class="positive">Across all goals</p></div>
+      <div class="card"><h3>Active Goals</h3><h2 class="count" data-target="3">0</h2><p class="positive">In progress</p></div>
+      <div class="card"><h3>Completed</h3><h2 class="count" data-target="1">0</h2><p class="positive">Emergency Fund ✓</p></div>
+    </div>
+
+    <div class="goals-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h3 style="margin:0;">My Goals</h3>
+        <button class="settings-btn">＋ Add Goal</button>
+      </div>
+      <div id="goals-list"></div>
+    </div>
+
+  </div>
+</div>
+<script src="assets/js/main.js"></script>
+<script>
+requireAuth();
+fetch('data/goals.json').then(r=>r.json()).then(data=>{
+  const el = document.getElementById('goals-list');
+  data.forEach(g=>{
+    const pct = Math.round((g.saved/g.target)*100);
+    const done = pct >= 100;
+    el.innerHTML += `
+      <div class="goal">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <h4>${g.name} ${done?'✅':''}</h4>
+          <small style="color:#888;">${Math.min(pct,100)}%</small>
+        </div>
+        <div class="progress"><div class="progress-bar" style="width:${Math.min(pct,100)}%"></div></div>
+        <small>RM ${g.saved.toLocaleString()} / RM ${g.target.toLocaleString()}</small>
+      </div>`;
+  });
+});
+</script>
+</body>
+</html>

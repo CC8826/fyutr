@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fyutr – Budget Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+  <div id="sidebar-mount"></div>
+  <div class="main">
+
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="toggle-btn mobile-menu" onclick="toggleSidebar()">☰</button>
+        <a href="dashboard.html" style="font-size:20px;text-decoration:none;">◀️</a>
+        <h1 style="margin:0;">Budget Planner</h1>
+      </div>
+      <p style="margin:0;font-size:16px;color:#888;">Track your spending</p>
+    </div>
+
+    <div class="cards" style="margin-bottom:20px;">
+      <div class="card"><h3>Total Budget</h3><h2 class="count" data-target="2000" data-rm>RM 0</h2><p class="positive">This month</p></div>
+      <div class="card"><h3>Total Spent</h3><h2 class="count" data-target="1240" data-rm>RM 0</h2><p class="negative">62% used</p></div>
+      <div class="card"><h3>Remaining</h3><h2 class="count" data-target="760" data-rm>RM 0</h2><p class="positive">Still available</p></div>
+    </div>
+
+    <div class="grid">
+      <div class="budget-card">
+        <h3 style="margin-bottom:20px;">Monthly Breakdown</h3>
+        <div id="budget-bars"></div>
+      </div>
+      <div class="chart-card">
+        <h3 style="margin-bottom:20px;">Spending Split</h3>
+        <canvas id="doughnutChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-top:20px;">
+      <h3 style="margin-bottom:20px;">Budget vs Spent</h3>
+      <div style="position:relative;height:240px;"><canvas id="barChart"></canvas></div>
+    </div>
+
+    <div class="budget-card" style="margin-top:20px;">
+      <h3 style="margin-bottom:16px;">💡 Our Verdict</h3>
+      <p style="padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);font-size:14px;margin:0;">🛒 <strong>Food (RM 420 / RM 600):</strong> You're at 70% — decent, but meal prepping on weekends could save you RM 50–80 a month.</p>
+      <p style="padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);font-size:14px;margin:0;">🚌 <strong>Transport (RM 180 / RM 400):</strong> Great job — only 45% used. Keep using public transport and you'll finish well under budget.</p>
+      <p style="padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);font-size:14px;margin:0;">🎮 <strong>Entertainment (RM 275 / RM 500):</strong> At 55%, you're on track. Avoid impulse subscriptions towards month end.</p>
+      <p style="padding:10px 0;font-size:14px;margin:0;">🛍️ <strong>Shopping (RM 365 / RM 500):</strong> At 73% and still mid-month — slow down. Try a 24-hour rule before any non-essential purchase.</p>
+    </div>
+
+  </div>
+</div>
+<script src="assets/js/main.js"></script>
+<script>
+requireAuth();
+fetch('data/budget.json').then(r=>r.json()).then(data=>{
+  const el = document.getElementById('budget-bars');
+  const colors = ['#3B82F6','#22C55E','#F59E0B','#EF4444'];
+  const labels=[], spent=[], limits=[];
+
+  data.forEach((b,i)=>{
+    const pct = Math.round((b.spent/b.limit)*100);
+    const color = pct>=80?'#EF4444':pct>=60?'#F59E0B':'#22C55E';
+    el.innerHTML += `
+      <div class="budget-item">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <h4>${b.name}</h4>
+          <small style="color:${color}">${pct}% · RM ${b.spent} / RM ${b.limit}</small>
+        </div>
+        <div class="progress"><div class="progress-bar" style="width:${pct}%;background:${color}"></div></div>
+      </div>`;
+    labels.push(b.name); spent.push(b.spent); limits.push(b.limit);
+  });
+
+  new Chart(document.getElementById('doughnutChart'),{type:'doughnut',data:{labels,datasets:[{data:spent,backgroundColor:colors,borderWidth:0}]},options:{plugins:{legend:{position:'bottom'}},cutout:'65%'}});
+  new Chart(document.getElementById('barChart'),{type:'bar',data:{labels,datasets:[{label:'Spent',data:spent,backgroundColor:colors},{label:'Budget',data:limits,backgroundColor:'rgba(0,0,0,0.06)'}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}},plugins:{legend:{position:'bottom'}}}});
+});
+</script>
+</body>
+</html>
